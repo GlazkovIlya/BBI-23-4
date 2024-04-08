@@ -1,0 +1,100 @@
+    public class Team
+    {
+        protected string _name;
+        protected int[] _places;
+        protected int _points;
+
+        public string Name => _name;
+        public int[] Places => _places;
+        public int Points => _points;
+
+        public Team(string name, int[] places, int points)
+        {
+            _name = name;
+            _places = places;
+            _points = points;
+        }
+        public void CalculatePoints()
+        {
+            int totalPoints = 0;
+            for (int i = 0; i < _places.Length; i++)
+            {
+                if (_places[i] <= 5)
+                {
+                    totalPoints += (6 - _places[i]);
+                }
+            }
+            _points = totalPoints;
+        }
+
+        public static Team Winner(params Team[] teams)
+        {
+            Team winner = teams[0];
+            foreach (Team team in teams)
+            {
+                if (team.Points > winner.Points)
+                {
+                    winner = team;
+                }
+                else if (team.Points == winner.Points && team.Places[0] == 1)
+                {
+                    winner = team;
+                }
+            }
+            return winner;
+        }
+    }
+            public class Women : Team
+        {
+            public Women(string name, int[] places, int points) : base(name, places, points)
+            {
+
+            }
+        }
+        public class Men : Team
+        {
+            public Men(string name, int[] places, int points) : base(name, places, points)
+            {
+
+            }
+        }
+
+    
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Women team1women = new Women("ББИ-23-4", new int[] { 9, 4, 6, 2, 5, 12 }, 0);
+            Women team2women = new Women("БИВТ-23-1", new int[] { 2, 5, 3, 8, 3, 10 }, 0);
+            Women team3women = new Women("БПМ-23-5", new int[] { 9, 4, 13, 5, 14, 11 }, 0);
+
+
+            Men team1men = new Men("ББИ-23-1", new int[] { 4, 3, 6, 9, 5, 12 }, 0);
+            Men team2men = new Men("БПМ-23-2", new int[] { 7, 12, 4, 5, 1, 9 }, 0);
+            Men team3men = new Men("ББИ-23-6", new int[] { 15, 2, 3, 5, 7, 9 }, 0);
+
+
+            teamwomen1.CalculatePoints();
+            teamwomen2.CalculatePoints();
+            teamwomen3.CalculatePoints();
+
+            team1men.CalculatePoints();
+            team2men.CalculatePoints();
+            team3men.CalculatePoints();
+
+            Team manwin = Team.Winner(team1men, team2men, team3men);
+            Team womanwin = Team.Winner(team1women, team2women, team3women);
+            if (manwin.Points > womanwin.Points)
+            {
+                Console.WriteLine("Победила команда {0} набрав {1} очков", manwin.Name, manwin.Points);
+            }
+            else
+            {
+                Console.WriteLine("Победила команда {0} набрав {1} очков", womanwin.Name, womanwin.Points);
+            }
+            Console.ReadKey();
+        }
+
+       
+            }
+        }
