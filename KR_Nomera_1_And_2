@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace KR_Tasks
+{
+    public abstract class Task
+    {
+        public abstract string ToString(string input);
+    }
+    public class Task1 : Task
+    {
+        public override string ToString(string input)
+        {
+            string final = "";
+            string[] sep = { ".", "?", "!" };
+            string[] sent = input.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+            int maxi = 0;
+            int i = 0;
+            int maxVal = int.MinValue;
+            foreach (string sentence in sent)
+            {
+                string[] arr = sentence.Split(' ');
+                i++;
+                if (arr.Length > maxVal)
+                {
+                    maxVal = arr.Length;
+                    maxi = i;
+                }
+            }
+            final = sent[maxi - 1];
+            return final;
+        }
+    }
+    public class Task2 : Task
+    {
+        public override string ToString(string input)
+        {
+            string final = "";
+            string[] sep = { ".", "?", " ", ",", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+            string[] sent = input.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+            int count = 0;
+            foreach (string word in sent)
+            {
+                string[] arr = word.Split(' ');
+                foreach (char letter in word)
+                {
+                    if ((letter == 'и') || (letter == 'к') || (letter == 'в') || (letter == 'с'))
+                    {
+                        count++;
+                    }
+                }
+            }
+            string temp = count.ToString();
+            final = temp;
+            return final;
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string text = "Mark Anatolyevich plz give me 5 ballov za etot task. You feelling good today? Please let me know!";
+            Task[] tasks = new Task[] { new Task1 { }, new Task2 { } };
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                Console.WriteLine(tasks[i].ToString(text));
+            }
+        }
+    }
+}
