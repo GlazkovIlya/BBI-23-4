@@ -1,0 +1,67 @@
+using System;
+
+namespace kr1
+{
+    public struct Number
+    {
+        public int Real { get; set; }
+
+        public Number(int real)
+        {
+            Real = real;
+        }
+
+        public static Number Add(Number n1, Number n2)
+        {
+            return new Number(n1.Real + n2.Real);
+        }
+
+        public static Number Subtract(Number n1, Number n2)
+        {
+            return new Number(n1.Real - n2.Real);
+        }
+
+        public static Number Multiply(Number n1, Number n2)
+        {
+            return new Number(n1.Real * n2.Real);
+        }
+
+        public static Number Divide(Number n1, Number n2)
+        {
+            if (n2.Real == 0)
+            {
+                throw new ArithmeticException("Попытка деления на ноль.");
+            }
+            return new Number(n1.Real / n2.Real);
+        }
+
+        public override string ToString()
+        {
+            return $"Number = {Real}";
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Number number1 = new Number(8);
+            Number number2 = new Number(2);
+
+            Number sum = Number.Add(number1, number2);
+            Number difference = Number.Subtract(number1, number2);
+            Number product = Number.Multiply(number1, number2);
+            Number quotient = Number.Divide(number1, number2);
+
+            Console.WriteLine("Числа:");
+            Console.WriteLine(number1);
+            Console.WriteLine(number2);
+            Console.WriteLine();
+            Console.WriteLine("Результат:");
+            Console.WriteLine(sum);
+            Console.WriteLine(difference);
+            Console.WriteLine(product);
+            Console.WriteLine(quotient);
+        }
+    }
+}
