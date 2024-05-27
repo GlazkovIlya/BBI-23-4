@@ -1,0 +1,112 @@
+using System.IO;
+using Newtonsoft.Json;
+
+public abstract class SerializableObject
+{
+    protected string FilePath { get; set; }
+
+    public SerializableObject(string filePath)
+    {
+        FilePath = filePath;
+    }
+
+    public void Save()
+    {
+        var json = JsonConvert.SerializeObject(this);
+        File.WriteAllText(FilePath, json);
+    }
+
+    public T Load<T>() where T : SerializableObject, new()
+    {
+        if (!File.Exists(FilePath))
+        {
+            throw new FileNotFoundException($"Файл {FilePath} не найден.");
+        }
+
+        var json = File.ReadAllText(FilePath);
+        return JsonConvert.DeserializeObject<T>(json);
+    }
+}
+using Newtonsoft.Json;
+
+[JsonObject]
+public class PersonOfYear : SerializableObject
+{
+    [JsonProperty("surname")]
+    public string Surname { get; set; }
+
+    [JsonProperty("votes")]
+    public int Votes { get; set; }
+
+    public PersonOfYear(string surname, int votes) : base("persons.json")
+    {
+        Surname = surname;
+        Votes = votes;
+    }
+
+    public override void Print()
+    {
+        Console.WriteLine($"Фамилия {Surname}   \t {Votes} голосов");
+    }
+}
+
+[JsonObject]
+public class DiscoveryOfYear : SerializableObject
+{
+    [JsonProperty("surname")]
+    public string Surname { get; set; }
+
+    [JsonProperty("votes")]
+    public int Votes { get; set; }
+
+    public DiscoveryOfYear(string surname, int votes) : base("discoveries.json")
+    {
+        Surname = surname;
+        Votes = votes;
+    }
+
+    public override void Print()
+    {
+        Console.WriteLine($"Фамилия {Surname}\t {Votes} голосов");
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        var person1 = new PersonOfYear("Марк Немирович", 10);
+        var person2 = new PersonOfYear("Илья Глазков", 2);
+        var discovery1 = new DiscoveryOfYear("Фонарь", 10);
+        var discovery2 = new DiscoveryOfYear("Компьютер", 1);
+
+        person1.Save();
+        person2.Save();
+        discovery1.Save();
+        discovery2.Save();
+
+        var loadedPersons = new List<PersonOfYear>();
+        var loadedDiscoveries = new List<DiscoveryOfYear>();
+
+        try
+        {
+            loadedPersons.AddRange(new PersonOfYear().Load<List<PersonOfYear>>());
+            loadedDiscoveries.AddRange(new DiscoveryOfYear().Load<List<DiscoveryOfYear>>());
+
+            foreach (var person in loadedPersons)
+            {
+                person.Print();
+            }
+
+            foreach (var discovery in loadedDiscoveries)
+            {
+                discovery.Print();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        Console.ReadKey();
+    }
+}
