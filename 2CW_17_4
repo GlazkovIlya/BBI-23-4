@@ -1,0 +1,75 @@
+using System;
+using System.IO;
+using System.Text.Json;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string folderPath = CreateFolderAndFiles();
+        ReadFiles(folderPath);
+    }
+
+    static string CreateFolderAndFiles()
+    {
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string folderPath = Path.Combine(documentsPath, "Fourth Task");
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+            Console.WriteLine("Создана папка: " + folderPath);
+
+            SaveDataToJson(folderPath, "string_1.json", "Input for task 1", "Output for task 1");
+            SaveDataToJson(folderPath, "string_2.json", "Input for task 2", "Output for task 2");
+        }
+        else
+        {
+            Console.WriteLine("Папка уже существует.");
+        }
+
+        return folderPath;
+    }
+
+    static void SaveDataToJson(string folderPath, string fileName, string input, string output)
+    {
+        string filePath = Path.Combine(folderPath, fileName);
+        var data = new { Input = input, Output = output };
+        string jsonData = JsonSerializer.Serialize(data);
+        File.WriteAllText(filePath, jsonData);
+        Console.WriteLine($"Сохранены данные в файл: {filePath}");
+    }
+
+    static void ReadFiles(string folderPath)
+    {
+        string filePath1 = Path.Combine(folderPath, "string_1.json");
+        string filePath2 = Path.Combine(folderPath, "string_2.json");
+
+        if (File.Exists(filePath1))
+        {
+            string jsonData = File.ReadAllText(filePath1);
+
+            var data = JsonSerializer.Deserialize<dynamic>(jsonData);
+            Console.WriteLine($"Данные из файла {filePath1}:");
+            Console.WriteLine($"Входные данные: {data.Input}");
+            Console.WriteLine($"Выходные данные: {data.Output}");
+        }
+        else
+        {
+            Console.WriteLine($"Файл {filePath1} не найден.");
+        }
+
+        if (File.Exists(filePath2))
+        {
+            string jsonData = File.ReadAllText(filePath2);
+            var data = JsonSerializer.Deserialize<dynamic>(jsonData);
+            Console.WriteLine($"Данные из файла {filePath2}:");
+            Console.WriteLine($"Входные данные: {data.Input}");
+            Console.WriteLine($"Выходные данные: {data.Output}");
+        }
+        else
+        {
+            Console.WriteLine($"Файл {filePath2} не найден.");
+        }
+    }
+}
