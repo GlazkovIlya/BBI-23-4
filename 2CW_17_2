@@ -1,0 +1,22 @@
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string input = "На вход подается строка. На выход - массив строк. Выписать последние слова всех предложений построчно.";
+        string[] lastWords = GetLastWords(input);
+        foreach (string word in lastWords)
+        {
+            Console.WriteLine(word);
+        }
+    }
+
+    static string[] GetLastWords(string text)
+    {
+        string[] sentences = text.Split(new char[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] lastWords = sentences.Select(s => s.Trim().Split().LastOrDefault()).ToArray();
+        return lastWords;
+    }
+}
