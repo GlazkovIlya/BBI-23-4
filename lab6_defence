@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ThirdLevel
+{
+    public struct Person
+    {
+
+        private string _name;
+        private int _pos;
+
+        public string Name { get { return _name; } }
+        public int Pos { get { return _pos; } }
+
+        public Person(string name, int pos)
+        {
+            _name = name;
+            _pos = pos;
+        }
+
+    }
+
+    class Program
+    {
+        private struct Team
+        {
+
+            private string _name;
+            private Person[] _persons;
+
+            public string Name { get { return _name; } }
+
+            public Person[] Persons { get { return _persons; } }
+
+            public Team(string name, Person[] persons)
+            {
+                _name = name;
+                _persons = persons;
+            }
+
+            public int TeamPoints()
+            {
+                int points = 0;
+                foreach (Person person in _persons)
+                {            
+                    points += person.Pos >= 1 && person.Pos <= 5 ? 6 - person.Pos : 0;
+                }
+                return points;
+            }
+
+            public void Print() => Console.WriteLine($"Team: {Name} Points: {TeamPoints()}");
+
+        }
+
+        static void Main()
+        {
+
+            Person[] teamCrypto = new Person[6];
+
+            teamCrypto[0] = new Person("Глазков", 17);
+            teamCrypto[1] = new Person("Кузнецов", 3);
+            teamCrypto[2] = new Person("Лендер", 9);
+            teamCrypto[3] = new Person("Лунин", 2);
+            teamCrypto[4] = new Person("Бас", 8);
+            teamCrypto[5] = new Person("Стоценко", 13);
+
+            Person[] teamBaskteball = new Person[6];
+
+            teamBaskteball[0] = new Person("Джордан", 16);
+            teamBaskteball[1] = new Person("Карри", 4);
+            teamBaskteball[2] = new Person("Ирвинг", 10);
+            teamBaskteball[3] = new Person("Леброн", 5);
+            teamBaskteball[4] = new Person("Джордж", 14);
+            teamBaskteball[5] = new Person("Роуз", 18);
+
+            Person[] teamFootball = new Person[6];
+
+            teamFootball[0] = new Person("Роналду", 11);
+            teamFootball[1] = new Person("Роналдо", 6);
+            teamFootball[2] = new Person("Месси", 7);
+            teamFootball[3] = new Person("Буффон", 12);
+            tteamFootball[4] = new Person("Акинфеев", 15);
+            teamFootball5] = new Person("Дзюба", 1);
+
+            Team[] teams = new Team[3];
+            teams[0] = new Team("Fishes", teamCrypto);
+            teams[1] = new Team("Birds", teamBaskteball);
+            teams[2] = new Team("Animals", teamFootball);
+
+            Sort(teams);
+
+            foreach (Team team in teams)
+            {
+                team.Print();
+            }
+
+
+        }
+        static void Sort(Team[] teams)
+        {
+            for (int i = 0; i < teams.Length - 1; i++)
+            {
+                for (int j = i; j < teams.Length; j++)
+                {
+                    if (teams[j].TeamPoints() > teams[i].TeamPoints())
+                    {
+                        Team temp = teams[i];
+                        teams[i] = teams[j];
+                        teams[j] = temp;
+                    }
+                    else if (teams[j].TeamPoints() == teams[i].TeamPoints())
+                    {
+                        if (Favorite(teams[j]))
+                        {
+                            Team temp = teams[i];
+                            teams[i] = teams[j];
+                            teams[j] = temp;
+                        }
+                        else { continue; }
+                    }
+                }
+            }
+        }
+        static bool Favorite(Team team)
+        {
+            foreach (Person person in team.Persons)
+            {
+                if (person.Pos == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
