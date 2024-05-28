@@ -1,0 +1,28 @@
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string folderPath = Path.Combine(documentsPath, "Fourth Task");
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+
+            string filePath1 = Path.Combine(folderPath, "string_1.json");
+            File.Create(filePath1).Close();
+            Console.WriteLine("Создан файл: " + filePath1);
+
+            string filePath2 = Path.Combine(folderPath, "string_2.json");
+            File.Create(filePath2).Close();
+            Console.WriteLine("Создан файл: " + filePath2);
+        }
+        else
+        {
+            Console.WriteLine("Папка уже существует.");
+        }
+    }
+}
