@@ -1,0 +1,19 @@
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string input = "На вход подается строка. На выход - строка. Выписать самое длинное слово в тексте (если несколько слов одинаковой длины, то первое из них в алфавитном порядке)";
+        string longestWord = FindLongestWord(input);
+        Console.WriteLine(longestWord);
+    }
+
+    static string FindLongestWord(string text)
+    {
+        string[] words = text.Split(new char[] { ' ', '.', ',', '!', '?', ';', ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+        string longestWord = words.OrderByDescending(w => w.Length).ThenBy(w => w).FirstOrDefault();
+        return longestWord;
+    }
+}
