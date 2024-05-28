@@ -1,0 +1,128 @@
+using System;
+
+public abstract class Answer
+{
+    protected string _surname;
+    protected int _number;
+    public string Surname => _surname; 
+    public int Number => _number;
+
+    public Answer(string surname, int number)
+    {
+        _surname = surname;
+        _number = number;
+    }
+
+    public virtual void Print()
+    {
+        Console.WriteLine($"Фамилия {_surname}   \t {_number} голосов");
+    }
+}
+
+class PersonOfYear : Answer
+{
+    private static int _totalPersonVotes = 0;
+    public PersonOfYear(string surname, int number) : base(surname, number)
+    {
+        _totalPersonVotes += number;
+    }
+    public override void Print()
+    {
+        Console.WriteLine($"Фамилия {Surname}\t {_number} голосов\t доля {(_number / (double)_totalPersonVotes) * 100:F2}%");
+    }
+}
+
+class DiscoveryOfYear : Answer
+{
+    private static int _totalDiscoveryVotes = 0;
+    public DiscoveryOfYear(string surname, int number) : base(surname, number)
+    {
+        _totalDiscoveryVotes += number;
+    }
+    public override void Print()
+    {
+        Console.WriteLine($"Фамилия {Surname}\t {_number} голосов\t доля {(_number / (double)_totalDiscoveryVotes) * 100:F2}%");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        PersonOfYear[] per = new PersonOfYear[]
+        {
+            new PersonOfYear("Марк Немирович", 10),
+            new PersonOfYear("Илья Глазков", 2),
+            new PersonOfYear("Дмитрий Кузнецов", 4),
+            new PersonOfYear("Александр Стоценко", 8),
+            new PersonOfYear("Владимир Лунин", 3),
+            new PersonOfYear("Наталья Глазкова", 9),
+            new PersonOfYear("Александр Тылибцев", 5),
+            new PersonOfYear("Майкл Джордан", 1)
+        };
+
+        DiscoveryOfYear[] dis = new DiscoveryOfYear[]
+        {
+            new DiscoveryOfYear("Фонарь", 10),
+            new DiscoveryOfYear("Компьютер", 1),
+            new DiscoveryOfYear("Двигатель внутреннего сгорания", 3),
+            new DiscoveryOfYear("Телефон", 2),
+            new DiscoveryOfYear("Ноутбук", 5),
+            new DiscoveryOfYear("Криптовалюта", 9)
+        };
+
+        Sort(per);
+        Sort(dis);
+
+        Console.WriteLine("PersonOfYear");
+        foreach (var person in per)
+        {
+            person.Print();
+        }
+
+        Console.WriteLine("\nDiscoveryOfYear");
+        foreach (var discovery in dis)
+        {
+            discovery.Print();
+        }
+
+        Console.ReadKey();
+    }
+
+    static void Sort<T>(T[] array) where T : Answer
+    {
+        if (array == null || array.Length <= 1) return;
+
+        var mid = (array.Length / 2);
+        var left = new T[mid];
+        var right = new T[array.Length - mid];
+
+        Array.Copy(array, 0, left, 0, mid);
+        Array.Copy(array, mid, right, 0, array.Length - mid);
+
+        Sort(left);
+        Sort(right);
+
+        Merge(array, left, right);
+    }
+
+    private static void Merge<T>(T[] result, T[] left, T[] right) where T : Answer
+    {
+        int i = 0, j = 0, k = 0;
+
+        while (i < left.Length && j < right.Length)
+        {
+            if (left[i].Number.CompareTo(right[j].Number) <= 0)
+            {
+                result[k++] = left[i++];
+            }
+            else
+            {
+                result[k++] = right[j++];
+            }
+        }
+
+        while (i < left.Length) result[k++] = left[i++];
+        while (j < right.Length) result[k++] = right[j++];
+    }
+}
